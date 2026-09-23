@@ -1,0 +1,12 @@
+# ===== Secrets & privacy - never commit =====
+.env
+
+# ===== Personal data (reports contain real emails, logs contain subjects) =====
+reports/
+logs/
+data/
+
+# ===== System & cache =====
+__pycache__/
+*.pyc
+.DS_Store
