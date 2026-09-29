@@ -108,5 +108,7 @@ tail -f logs/run.log                # follow the run log
 - **"Account not found"**: make sure `MAIL_ACCOUNT` in `.env` matches the account address in the Mail app
 - **Inbox only**: the tool reads only the selected account's inbox — no subfolders, no sent mail
 - **Switch models**: change `ZHIPU_MODEL` in `.env` (e.g. the free `glm-5.3-flash` or the stronger `glm-4.6`)
+- **GLM Coding Plan subscriber**: plan quota is billed separately from the pay-as-you-go API balance —
+  set `ZHIPU_STYLE=anthropic` (and `ZHIPU_MODEL=glm-4.6`) in `.env` to route requests through the Coding Plan channel
 - **Too many/too few emails**: tune `MAX_EMAILS` and `BATCH_SIZE` in `.env`
 - **Summary language**: set `SUMMARY_LANG=en` or `SUMMARY_LANG=zh` in `.env` (default: `en`)

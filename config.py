@@ -45,7 +45,11 @@ SUMMARY_LANGUAGE_NAME = _SUMMARY_LANGS.get(SUMMARY_LANG, SUMMARY_LANG)
 # ===== Zhipu BigModel (primary provider) =====
 ZHIPU_API_KEY = os.environ.get("ZHIPU_API_KEY", "")
 ZHIPU_MODEL = os.environ.get("ZHIPU_MODEL", "glm-5.3-flash")
+# API style: "openai" = standard pay-as-you-go API (default);
+#            "anthropic" = GLM Coding Plan channel, consumes your subscription quota
+ZHIPU_STYLE = os.environ.get("ZHIPU_STYLE", "openai")
 ZHIPU_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+ZHIPU_ANTHROPIC_URL = "https://open.bigmodel.cn/api/anthropic/v1/messages"
 
 # ===== DeepSeek (fallback provider) =====
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
