@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: email-digest-agent
+    runtime: python
+    rootDir: webdemo
+    plan: free
+    buildCommand: "true"
+    startCommand: python3 server.py
+    healthCheckPath: /healthz
+    envVars:
+      - key: LLM_MODE
+        value: auto
+      - key: ZHIPU_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
