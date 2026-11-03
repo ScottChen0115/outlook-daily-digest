@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Email Digest Agent — Demo</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>📬 Email Digest Agent</h1>
+    <p class="sub">Paste a day's emails → get an Eisenhower-matrix digest, a to-do list, and ask questions about your inbox.</p>
+  </div>
+  <span id="mode-badge" class="badge">…</span>
+</header>
+
+<div id="mock-banner" class="banner" hidden>
+  Running on the <b>offline mock model</b> (keyword rules, no API key configured). Results show the
+  pipeline working, not real AI quality.
+</div>
+
+<main class="layout">
+  <section class="panel input-panel">
+    <h2>1 · Your emails</h2>
+    <label class="lbl" for="sample-select">Load a sample inbox</label>
+    <div class="row">
+      <select id="sample-select"><option value="">— choose a scenario —</option></select>
+      <button id="load-sample" class="ghost">Load</button>
+    </div>
+    <p id="sample-desc" class="hint"></p>
+    <label class="lbl" for="email-input">…or paste emails (separate emails with a line containing only <code>---</code>)</label>
+    <textarea id="email-input" spellcheck="false" placeholder="Subject: Budget approval needed
+From: Maria Lopez &lt;maria@company.com&gt;
+Time: 2026-11-02 09:15
+Please approve the Q1 budget by tomorrow noon.
+---
+Subject: Tech Weekly Newsletter
+From: news@techweekly.io
+This week: 10 productivity tools…"></textarea>
+    <div class="row">
+      <button id="run" class="primary">Generate digest</button>
+      <button id="clear" class="ghost">Clear</button>
+      <span id="count" class="hint"></span>
+    </div>
+    <div id="error" class="error" hidden></div>
+  </section>
+
+  <section class="panel output-panel">
+    <h2>2 · Digest</h2>
+    <div id="empty-state" class="empty">Load a sample or paste emails, then press <b>Generate digest</b>.</div>
+    <div id="result" hidden>
+      <div id="meta" class="meta"></div>
+      <div id="warnings"></div>
+      <div class="toolbar">
+        <span id="dm-info"></span>
+        <button id="toggle-dismissed" class="ghost small">Hide dismissed</button>
+        <button id="restore-all" class="ghost small">Restore all</button>
+      </div>
+      <div id="todo"></div>
+      <div id="cards" class="cards"></div>
+      <div id="quadrants"></div>
+    </div>
+  </section>
+
+  <section class="panel chat-panel">
+    <h2>3 · Ask about this inbox</h2>
+    <div id="chat-log" class="chat-log">
+      <div class="msg bot">Generate a digest first, then ask things like “What do I need to do today?” or “What can I ignore?”</div>
+    </div>
+    <div class="chips">
+      <button class="chip">What do I need to do today?</button>
+      <button class="chip">What is urgent?</button>
+      <button class="chip">Any deadlines?</button>
+      <button class="chip">What can I ignore?</button>
+    </div>
+    <form id="chat-form" class="row">
+      <input id="chat-input" maxlength="500" placeholder="Ask a question…" autocomplete="off">
+      <button class="primary" type="submit">Send</button>
+    </form>
+  </section>
+</main>
+<footer class="foot">Email content is sent only to the configured AI provider. Nothing is stored on the server.</footer>
+<script src="/app.js"></script>
+</body>
+</html>
