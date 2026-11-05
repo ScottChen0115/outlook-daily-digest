@@ -1,5 +1,7 @@
 # Email Digest Agent — web demo
 
+**Live demo: https://email-digest-agent-eo4s.onrender.com** · Team handover: [中文](docs/team-handover.zh.md) / [English](docs/team-handover.en.md) · Submission files: [`docs/submission/`](docs/submission/)
+
 A browser version of `outlook-daily-digest` that anyone can try from a link. Paste a day's emails
 (or load a sample inbox) and the agent:
 

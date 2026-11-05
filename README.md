@@ -11,7 +11,7 @@ Automatically summarizes the previous day's email from the macOS **Mail** app ev
 - **Zero Microsoft authorization**: email is read locally from the macOS Mail app; no Azure registration, no IT admin consent
 
 > **Web demo:** a browser version that runs on any server (paste emails, get the digest, chat about the inbox)
-> lives in [`webdemo/`](webdemo/README.md).
+> lives in [`webdemo/`](webdemo/README.md). Live: https://email-digest-agent-eo4s.onrender.com
 
 ## How it works
 
