@@ -10,6 +10,9 @@ Automatically summarizes the previous day's email from the macOS **Mail** app ev
 - Zero third-party dependencies — Python standard library only
 - **Zero Microsoft authorization**: email is read locally from the macOS Mail app; no Azure registration, no IT admin consent
 
+> **Web demo:** a browser version that runs on any server (paste emails, get the digest, chat about the inbox)
+> lives in [`webdemo/`](webdemo/README.md). Live: https://email-digest-agent-eo4s.onrender.com
+
 ## How it works
 
 AppleScript asks the system Mail app for messages received "yesterday" in the configured account's inbox, hands them to an LLM for summarization and classification, then writes a local HTML report. All data only flows to the LLM provider you configure — no other third-party servers.
