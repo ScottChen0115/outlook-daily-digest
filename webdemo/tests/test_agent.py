@@ -195,6 +195,11 @@ class AskTests(unittest.TestCase):
         ans, _ = digest.ask("What's the weather in Paris?", self.items)
         self.assertIn("only answer questions about the emails", ans)
 
+    def test_markdown_is_stripped_from_answers(self):
+        md = "## Urgent\n- **Client A outage** — due *10:00*\n* __Budget__ approval\nCost: 2*3*4"
+        self.assertEqual(digest.plain_text(md),
+                         "Urgent\n- Client A outage — due 10:00\n- Budget approval\nCost: 2*3*4")
+
     def test_tampered_items_are_sanitised(self):
         ans, _ = digest.ask("summary", [{"category": "Q1", "subject": "ok"}, {"category": "BAD"}, "junk"])
         self.assertTrue(ans.startswith("1 emails"))

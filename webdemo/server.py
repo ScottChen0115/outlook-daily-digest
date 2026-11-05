@@ -46,6 +46,15 @@ class Handler(BaseHTTPRequestHandler):
         if length <= 0:
             raise digest.InputError("Empty request body")
         if length > config.MAX_REQUEST_BYTES:
+            # Drain (a bounded amount of) the unread body first: closing a socket with unread
+            # data makes the OS send a reset, and the client never sees this error message.
+            remaining = min(length, 8 * config.MAX_REQUEST_BYTES)
+            while remaining > 0:
+                chunk = self.rfile.read(min(65536, remaining))
+                if not chunk:
+                    break
+                remaining -= len(chunk)
+            self.close_connection = True
             raise digest.InputError(f"Request too large (limit {config.MAX_REQUEST_BYTES // 1024} KB)")
         try:
             return json.loads(self.rfile.read(length).decode("utf-8"))
