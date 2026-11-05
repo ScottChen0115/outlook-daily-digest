@@ -1,4 +1,4 @@
-# Test log — SIMULATED RUN (not for submission)
+# Test log — SIMULATED RUN (not for submission; superseded by `submission/test-log.md`)
 
 > This is a dry run produced by the AI assistant with the **offline mock model** (no API key).
 > It shows the shape of the process. The real test log must describe tests the team ran

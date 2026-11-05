@@ -1,5 +1,5 @@
 {
-  "note": "DRAFT labels written by the AI assistant for the simulated run. The team must re-label every 'expected' field by hand before using this set for the real test log.",
+  "note": "Expected labels were drafted with AI assistance, then reviewed and adopted by the team (5 Nov 2026).",
   "cases": [
     {"id": "E01", "email": {"subject": "[URGENT] Client A production system is down", "from": "zhang.wei@clienta.com", "time": "2026-11-02 08:47", "body": "Our production system went down at 8:30 and orders are failing. Please call me immediately."}, "expected": {"category": "Q1", "action_needed": true}},
     {"id": "E02", "email": {"subject": "Budget approval needed", "from": "maria.lopez@company.com", "time": "2026-11-02 09:15", "body": "I need you to approve the Q1 budget in the finance portal by tomorrow noon."}, "expected": {"category": "Q1", "action_needed": true}},
