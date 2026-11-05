@@ -21,7 +21,7 @@ Our prototype sorts a day's emails into the Eisenhower matrix, extracts to-dos a
 
 **Chose not to fix**
 
-- The Friday contract: either quadrant is defensible, and over-warning on a client deadline is the safer error.
+- The Friday contract: either quadrant is defensible, and repeated runs gave both answers. Over-warning on a client deadline is the safer error.
 - Old chat messages stay on screen after a new digest is generated; this is cosmetic.
 - Our test emails are synthetic and few. Real inboxes (long threads, forwarded chains) are untested, so reviewers' own emails are the most useful test.
 

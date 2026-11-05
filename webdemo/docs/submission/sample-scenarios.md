@@ -1,12 +1,13 @@
 # Sample Scenarios — Email Digest Agent
 
-Demo link: **[to be added]**
+Demo link: **https://email-digest-agent-eo4s.onrender.com**
+(free hosting: if the page has been idle, the first load can take up to a minute)
 
 Try these first. Each one is a task the agent was built to handle.
 
 1. **What should I do first?**
    Choose *Office worker — busy Monday* in the sample list, click **Generate digest**, then ask *"What is urgent?"*.
-   Expected: the client outage, the budget approval and the client contract are listed as Important & Urgent, each with its deadline.
+   Expected: the client outage and the budget approval are listed as Important & Urgent, each with its deadline. The client contract due Friday is a borderline case and may appear under either Important & Urgent or Important.
 
 2. **Student deadline week**
    Load *University student — week 10* and ask *"What do I need to do today?"*.
