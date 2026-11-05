@@ -10,5 +10,7 @@ services:
     envVars:
       - key: LLM_MODE
         value: live
+      - key: DEEPSEEK_MODEL
+        value: deepseek-flash
       - key: DEEPSEEK_API_KEY
         sync: false
