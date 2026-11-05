@@ -14,7 +14,7 @@ Features:
 - **Chat panel**: ask questions about the loaded inbox ("What do I need to do today?", "What can I ignore?"). It answers only from the emails and does not make things up.
 - Three built-in sample inboxes: office worker, student, and edge cases. The edge cases cover prompt injection, HTML, Chinese text, an empty subject, and a duplicate.
 
-AI calls go to Zhipu first and fall back to DeepSeek if that fails. **With no API key**, the app uses an offline mock model (keyword rules) and shows a yellow banner saying so.
+AI calls use a single provider, the **DeepSeek** API (model `deepseek-chat`). **With no API key**, the app uses an offline mock model (keyword rules) and shows a yellow banner saying so.
 
 ## 2. Current status
 
@@ -47,7 +47,7 @@ Not fixed; must be checked on a real model:
 ```bash
 git checkout cursor/web-demo-agent
 cd webdemo
-cp .env.example .env                       # add ZHIPU_API_KEY and/or DEEPSEEK_API_KEY
+cp .env.example .env                       # add DEEPSEEK_API_KEY and set LLM_MODE=live
 python3 server.py                          # open http://localhost:8000
 python3 -m unittest discover -s tests      # automated tests
 python3 eval.py                            # score against the labelled set
@@ -58,7 +58,7 @@ You only need Python 3.10 or newer. There are no packages to install.
 ## 5. Deploy (to get the demo link)
 
 1. On Render, choose New → Blueprint and connect this repo. It picks up `render.yaml` from the repo root.
-2. In the dashboard, add `ZHIPU_API_KEY` and set `LLM_MODE` to **`live`**. That way a key problem shows an error instead of quietly switching to mock results.
+2. Paste your `DEEPSEEK_API_KEY` when prompted (create one on the API Keys page at https://platform.deepseek.com; the account needs a positive balance). `render.yaml` already sets `LLM_MODE` to **`live`**, so a key problem shows an error instead of quietly switching to mock results.
 3. The free tier sleeps when idle. During the review window, open the link once each day first.
 
 Docker also works: `docker build -t digest webdemo`.
@@ -83,7 +83,7 @@ Docker also works: `docker build -t digest webdemo`.
 |---|---|
 | `webdemo/server.py` | Web server and API |
 | `webdemo/digest.py` | Core logic: email parsing, classification, chat |
-| `webdemo/llm.py` | Zhipu / DeepSeek calls and the mock switch |
+| `webdemo/llm.py` | DeepSeek calls and the mock switch |
 | `webdemo/mock_model.py` | Offline mock model, for demo and tests only |
 | `webdemo/static/` | Front-end page |
 | `webdemo/samples/sample_inboxes.json` | The 3 sample inboxes |

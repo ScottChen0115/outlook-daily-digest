@@ -41,15 +41,9 @@ _SUMMARY_LANGS = {"en": "English", "zh": "Simplified Chinese"}
 SUMMARY_LANG = os.environ.get("SUMMARY_LANG", "en").strip().lower() or "en"
 SUMMARY_LANGUAGE_NAME = _SUMMARY_LANGS.get(SUMMARY_LANG, SUMMARY_LANG)
 
-ZHIPU_API_KEY = os.environ.get("ZHIPU_API_KEY", "")
-ZHIPU_MODEL = os.environ.get("ZHIPU_MODEL", "glm-5.3-flash")
-ZHIPU_STYLE = os.environ.get("ZHIPU_STYLE", "openai")
-ZHIPU_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
-ZHIPU_ANTHROPIC_URL = "https://open.bigmodel.cn/api/anthropic/v1/messages"
-
-DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
-DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
+DEEPSEEK_URL = os.environ.get("DEEPSEEK_URL", "https://api.deepseek.com/chat/completions")
 
 CATEGORIES = {
     "Q1": {"name": "Important & Urgent", "color": "#dc2626", "emoji": "🔴"},

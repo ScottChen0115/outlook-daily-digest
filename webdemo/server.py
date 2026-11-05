@@ -58,9 +58,8 @@ class Handler(BaseHTTPRequestHandler):
             name, ctype = STATIC[path]
             return self._send(200, (config.BASE_DIR / "static" / name).read_bytes(), ctype)
         if path == "/api/status":
-            provs = [p[0] for p in llm.live_providers()]
-            return self._send(200, {"mode": llm.mode(), "live_providers": provs,
-                                    "max_emails": config.MAX_EMAILS})
+            return self._send(200, {"mode": llm.mode(), "model": config.DEEPSEEK_MODEL,
+                                    "key_configured": llm.has_key(), "max_emails": config.MAX_EMAILS})
         if path == "/api/samples":
             return self._send(200, SAMPLES_FILE.read_bytes())
         if path == "/healthz":
@@ -83,10 +82,13 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, {"error": "Not found"})
         except digest.InputError as e:
             self._send(400, {"error": str(e)})
+        except llm.LLMConfigError as e:
+            logger.error("LLM configuration problem: %s", e)
+            self._send(503, {"error": "The AI service is not configured correctly (DeepSeek API key missing, "
+                                      "invalid or out of balance). Please tell the demo owner."})
         except llm.LLMError as e:
             logger.error("LLM failure: %s", e)
-            self._send(502, {"error": "The AI provider failed to respond. Please try again in a moment.",
-                             "detail": str(e)[:300]})
+            self._send(502, {"error": "The AI provider failed to respond. Please try again in a moment."})
         except Exception:
             logger.exception("Unhandled error on %s", path)
             self._send(500, {"error": "Internal server error"})

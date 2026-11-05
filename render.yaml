@@ -9,8 +9,6 @@ services:
     healthCheckPath: /healthz
     envVars:
       - key: LLM_MODE
-        value: auto
-      - key: ZHIPU_API_KEY
-        sync: false
+        value: live
       - key: DEEPSEEK_API_KEY
         sync: false

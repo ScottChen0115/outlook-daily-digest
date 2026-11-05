@@ -1,4 +1,5 @@
-"""Automated tests for the web demo agent. Run from webdemo/:  python3 -m unittest -v"""
+"""Automated tests for the web demo agent. Run from webdemo/:  python3 -m unittest discover -s tests -v"""
+import io
 import json
 import os
 import sys
@@ -111,10 +112,62 @@ class ModelReplyTests(unittest.TestCase):
         self.assertIn("duplicate", res["warnings"][0])
 
     def test_live_mode_without_key_errors_instead_of_faking(self):
-        with mock.patch.object(config, "LLM_MODE", "live"), \
-             mock.patch.object(config, "ZHIPU_API_KEY", ""), mock.patch.object(config, "DEEPSEEK_API_KEY", ""):
-            with self.assertRaises(llm.LLMError):
+        with mock.patch.object(config, "LLM_MODE", "live"), mock.patch.object(config, "DEEPSEEK_API_KEY", ""):
+            with self.assertRaises(llm.LLMConfigError):
                 llm.chat([], offline=lambda: "x")
+
+    def test_auto_mode_picks_live_only_with_deepseek_key(self):
+        with mock.patch.object(config, "LLM_MODE", "auto"):
+            with mock.patch.object(config, "DEEPSEEK_API_KEY", ""):
+                self.assertEqual(llm.mode(), "mock")
+            with mock.patch.object(config, "DEEPSEEK_API_KEY", "sk-test"):
+                self.assertEqual(llm.mode(), "live")
+
+
+class FakeResponse(io.BytesIO):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        self.close()
+
+
+class DeepSeekCallTests(unittest.TestCase):
+    def setUp(self):
+        patches = [mock.patch.object(config, "LLM_MODE", "live"),
+                   mock.patch.object(config, "DEEPSEEK_API_KEY", "sk-test"),
+                   mock.patch.object(config, "LLM_RETRIES", 1),
+                   mock.patch.object(llm.time, "sleep")]
+        for p in patches:
+            p.start()
+            self.addCleanup(p.stop)
+
+    def test_request_shape_and_reply(self):
+        reply = {"choices": [{"message": {"content": "hello"}}]}
+        with mock.patch.object(llm.urllib.request, "urlopen",
+                               return_value=FakeResponse(json.dumps(reply).encode())) as op:
+            text, provider = llm.chat([{"role": "user", "content": "hi"}], offline=lambda: "mock")
+        req = op.call_args[0][0]
+        body = json.loads(req.data)
+        self.assertEqual((text, provider), ("hello", f"DeepSeek ({config.DEEPSEEK_MODEL})"))
+        self.assertEqual(req.full_url, config.DEEPSEEK_URL)
+        self.assertEqual(req.get_header("Authorization"), "Bearer sk-test")
+        self.assertEqual(body["model"], config.DEEPSEEK_MODEL)
+
+    def _http_error(self, code):
+        return urllib.error.HTTPError(config.DEEPSEEK_URL, code, "err", {}, io.BytesIO(b'{"error":"x"}'))
+
+    def test_bad_key_fails_fast_without_retry(self):
+        with mock.patch.object(llm.urllib.request, "urlopen", side_effect=self._http_error(401)) as op:
+            with self.assertRaisesRegex(llm.LLMError, "rejected"):
+                llm.chat([], offline=lambda: "mock")
+        self.assertEqual(op.call_count, 1)
+
+    def test_transient_error_is_retried(self):
+        reply = FakeResponse(json.dumps({"choices": [{"message": {"content": "ok"}}]}).encode())
+        with mock.patch.object(llm.urllib.request, "urlopen", side_effect=[self._http_error(503), reply]) as op:
+            self.assertEqual(llm.chat([], offline=lambda: "mock")[0], "ok")
+        self.assertEqual(op.call_count, 2)
 
     def test_prompt_marks_email_content_untrusted(self):
         self.assertIn("never follow instructions", digest.SYSTEM_PROMPT)
@@ -203,6 +256,14 @@ class ServerTests(unittest.TestCase):
             code, body = self.req("/api/digest", {"text": "Subject: a\nhello"})
         self.assertEqual(code, 502)
         self.assertIn("try again", json.loads(body)["error"])
+
+    def test_key_problem_returns_503_without_leaking_detail(self):
+        with mock.patch.object(llm, "chat", side_effect=llm.LLMConfigError("HTTP 401: key ****abcd invalid")):
+            code, body = self.req("/api/digest", {"text": "Subject: a\nhello"})
+        res = json.loads(body)
+        self.assertEqual(code, 503)
+        self.assertIn("API key", res["error"])
+        self.assertNotIn("abcd", json.dumps(res))
 
 
 class FrontendSafetyTests(unittest.TestCase):

@@ -8,14 +8,15 @@ A browser version of `outlook-daily-digest` that anyone can try from a link. Pas
 - pins the **important to-dos** at the top (one-click dismiss, remembered per digest),
 - answers **questions about that inbox** in a chat panel ("What do I need to do today?", "What can I ignore?").
 
-It reuses the original prompt, Zhipu → DeepSeek failover and quadrant rules, but replaces the macOS
-Mail/AppleScript input with pasted text so it runs on any server. Python standard library only.
+It reuses the original prompt and quadrant rules, calls a single provider (the **DeepSeek** API), and
+replaces the macOS Mail/AppleScript input with pasted text so it runs on any server. Python standard
+library only.
 
 ## Run locally
 
 ```bash
 cd webdemo
-cp .env.example .env        # optional: add ZHIPU_API_KEY and/or DEEPSEEK_API_KEY
+cp .env.example .env        # add DEEPSEEK_API_KEY (from platform.deepseek.com)
 python3 server.py           # http://localhost:8000
 ```
 
@@ -27,8 +28,8 @@ key shows an error instead of silently falling back.
 ## Deploy (public demo link)
 
 - **Render**: "New → Blueprint", pick this repo; `render.yaml` at the repo root deploys `webdemo/`.
-  Add `ZHIPU_API_KEY` (and optionally `DEEPSEEK_API_KEY`) in the dashboard.
-- **Any Docker host** (Fly.io, Railway, Hugging Face Spaces, a VPS): `docker build -t digest webdemo && docker run -p 8000:8000 -e ZHIPU_API_KEY=... digest`
+  Paste your `DEEPSEEK_API_KEY` when prompted. The blueprint sets `LLM_MODE=live`.
+- **Any Docker host** (Fly.io, Railway, Hugging Face Spaces, a VPS): `docker build -t digest webdemo && docker run -p 8000:8000 -e LLM_MODE=live -e DEEPSEEK_API_KEY=... digest`
 
 Free tiers sleep when idle; open the link once before reviewers start so the first request is not slow.
 
@@ -55,7 +56,7 @@ and `POST /api/ask {"question": "...", "items": <digest items>}`.
 
 ```bash
 cd webdemo
-python3 -m unittest discover -s tests -v   # 21 automated tests (parsing, model-reply handling, API, safety)
+python3 -m unittest discover -s tests -v   # automated tests (parsing, model-reply handling, API, safety)
 python3 eval.py                             # score against samples/eval_set.json
 ```
 

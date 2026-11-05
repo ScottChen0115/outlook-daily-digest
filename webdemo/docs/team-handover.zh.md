@@ -14,7 +14,7 @@
 - **聊天面板**：可以针对这批邮件提问，比如"今天要做什么""什么可以忽略"。只根据邮件内容回答，不编造。
 - 内置 3 个示例收件箱：上班族、学生、边界情况（提示词注入、HTML 代码、中文、空标题、重复邮件）。
 
-AI 调用：智谱优先，失败时自动切换 DeepSeek。**没有 API key 时**会使用离线 mock 模型（关键词规则），页面顶部有黄色横幅提示。
+AI 调用：只用 **DeepSeek** 一个 API（模型 `deepseek-chat`）。**没有 API key 时**会使用离线 mock 模型（关键词规则），页面顶部有黄色横幅提示。
 
 ## 2. 当前状态
 
@@ -47,7 +47,7 @@ AI 调用：智谱优先，失败时自动切换 DeepSeek。**没有 API key 时
 ```bash
 git checkout cursor/web-demo-agent
 cd webdemo
-cp .env.example .env                       # 填入 ZHIPU_API_KEY 和/或 DEEPSEEK_API_KEY
+cp .env.example .env                       # 填入 DEEPSEEK_API_KEY，并设 LLM_MODE=live
 python3 server.py                          # 打开 http://localhost:8000
 python3 -m unittest discover -s tests      # 自动化测试
 python3 eval.py                            # 用标注集打分
@@ -58,7 +58,7 @@ python3 eval.py                            # 用标注集打分
 ## 5. 部署（获得演示链接）
 
 1. 在 Render 上选择 New → Blueprint，连接这个仓库，它会自动读取根目录的 `render.yaml`。
-2. 在后台填入 `ZHIPU_API_KEY`，再把 `LLM_MODE` 改成 **`live`**。这样 key 出问题时会直接报错，不会悄悄换成 mock 的结果。
+2. 创建时按提示粘贴 `DEEPSEEK_API_KEY`（在 https://platform.deepseek.com 的 API Keys 页面申请，账户需要有余额）。`render.yaml` 已经把 `LLM_MODE` 设为 **`live`**，key 出问题时会直接报错，不会悄悄换成 mock 的结果。
 3. 免费版闲置后会休眠。评审期间，每天先打开一次链接。
 
 也可以用 Docker 部署：`docker build -t digest webdemo`。
@@ -83,7 +83,7 @@ python3 eval.py                            # 用标注集打分
 |---|---|
 | `webdemo/server.py` | 网页服务器和 API |
 | `webdemo/digest.py` | 核心逻辑：解析邮件、分类、聊天 |
-| `webdemo/llm.py` | 智谱 / DeepSeek 调用和 mock 切换 |
+| `webdemo/llm.py` | DeepSeek 调用和 mock 切换 |
 | `webdemo/mock_model.py` | 离线 mock 模型，仅用于演示和测试 |
 | `webdemo/static/` | 前端页面 |
 | `webdemo/samples/sample_inboxes.json` | 3 个示例收件箱 |

@@ -62,7 +62,7 @@ async function init() {
       badge.classList.add("mock");
       $("mock-banner").hidden = false;
     } else {
-      badge.textContent = "Live AI: " + (st.live_providers.join(" → ") || "none");
+      badge.textContent = st.key_configured ? `Live AI: DeepSeek (${st.model})` : "DeepSeek key missing";
     }
     const s = await api("/api/samples");
     samples = s.scenarios || [];
